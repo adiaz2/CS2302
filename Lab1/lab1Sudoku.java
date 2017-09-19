@@ -47,10 +47,15 @@ public class lab1Sudoku{
 
 		int S[][] = new int[n][n];
 		int startNum;
-		for(int r=0; r<n-1; r++){
+		for(int r=0; r<n; r++){
 			startNum = (int)(Math.sqrt(n)*(r%Math.sqrt(n)) + (double)(r/Math.sqrt(n)));
 			for(int c=0; c<n-1;c++)
 				S[r][c] = ((startNum + c) % n) + 1;
+		}
+		for(int i = 0; i<S.length; i++){
+			for(int j = 0; j<S[i].length; j++)
+				System.out.print(S[i][j]);
+			System.out.println();
 		}
 		double startTime = 0;
 		if(choice==1){
