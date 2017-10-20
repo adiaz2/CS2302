@@ -24,7 +24,13 @@ public class SierpinskiLab extends JFrame {
 	void drawRectangles(Graphics g) {
 		g2d = (Graphics2D) g;
 		g2d.setPaint(Color.GRAY);
+		double startTime = System.nanoTime();
+		drawGasket(0,0,729);
+		System.out.println("Recursive Runtime: " + (System.nanoTime() - startTime));
+
+		startTime = System.nanoTime();
 		drawGasketStack(0, 0, 729);
+		System.out.println("Stack Runtime: " + (System.nanoTime() - startTime));
 	}
 
 	public void drawGasket(int x, int y, int side) {
@@ -65,39 +71,44 @@ public class SierpinskiLab extends JFrame {
 			//we make sure that we only create a new rectangle if this is the first time we access this element in this stack
 			if(st.peek().getI() == 0 && st.peek().getJ() == 0)
 				g2d.fill(new Rectangle2D.Double(gasketInfo[x]+gasketInfo[sub],gasketInfo[y]+gasketInfo[sub],gasketInfo[sub]-1,gasketInfo[sub]-1));
-	//This part mimics the for loop that makes the recursive calls.
-	//Since the loop makes a recursive call if i and j are not both equal to 1,
-	//we can add to the stack while this does not occur
-			
+	
+	
+		//This part mimics the for loop that makes the recursive calls.
+		//Since the loop makes a recursive call if i and j are not both equal to 1,
+		//we can add to the stack while this does not occur	
+	
 			//if the sub is less than three, you can remove this element from the stack
 			if(gasketInfo[sub] < 3)
-			  st.pop();
+				st.pop();
+			
 			//if the i and j are currently both 1, we increase j by  1 and restart the loop
 			else if(st.peek().getI() == 1 && st.peek().getJ() == 1)
-			  st.peek().setJ(st.peek().getJ()+1);
+				st.peek().setJ(st.peek().getJ()+1);
+			
 			//if the loop of the item at the top of the stack is at its last iteration, then you pop the top
 			else if(st.peek().getI() == 2 && st.peek().getJ() == 2){
-			i = st.peek().getI();
-			j = st.peek().getJ();
-			st.pop();
-			st.push(new gasketClass(gasketInfo[x]+i*gasketInfo[sub], gasketInfo[y]+j*gasketInfo[sub], gasketInfo[sub]/3));
-		}
-			//if and j is at the last iteration of its loop we increase j by 1
-			else if(st.peek().getJ()==2) {
-			i = st.peek().getI();
-			j = st.peek().getJ();
-			st.peek().setI(st.peek().getI()+1);
-			st.peek().setJ(0);
-			st.push(new gasketClass(gasketInfo[x]+i*gasketInfo[sub], gasketInfo[y]+j*gasketInfo[sub], gasketInfo[sub]/3));
-			}	
-			
-			//if both i and j are 0, we move j up to j=2
-			else{
-			i = st.peek().getI();
-			j = st.peek().getJ();
-			st.peek().setJ(st.peek().getJ()+1);
-			st.push(new gasketClass(gasketInfo[x]+i*gasketInfo[sub], gasketInfo[y]+j*gasketInfo[sub], gasketInfo[sub]/3));
+				i = st.peek().getI();
+				j = st.peek().getJ();
+				st.pop();
+				st.push(new gasketClass(gasketInfo[x]+i*gasketInfo[sub], gasketInfo[y]+j*gasketInfo[sub], gasketInfo[sub]/3));
 			}
+			//if and j is at the last iteration of its loop we increase j by 1
+			else{
+				i = st.peek().getI();
+				j = st.peek().getJ();
+			
+				//simulates how the loop would increase its variables. If j is 2, i increases by 1 and j goes back to 0
+				if(st.peek().getJ() == 2){
+					st.peek().setI(st.peek().getI()+1);
+					st.peek().setJ(0);
+				}
+				else{
+					st.peek().setJ(st.peek().getJ()+1);
+				}
+			
+				//this simulates the recursive call by creating a new item at the top of the stack
+				st.push(new gasketClass(gasketInfo[x]+i*gasketInfo[sub], gasketInfo[y]+j*gasketInfo[sub], gasketInfo[sub]/3));
+			}	
 		}
 	}
 
